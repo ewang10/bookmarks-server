@@ -31,19 +31,6 @@ app.use(function validateBearerToken(req, res, next) {
 
 app.use(bookmarkRouter);
 
-app.get('/bookmarks', (req, res) => {
-    //get list of bookmarks
-})
-app.post('/bookmarks', (req, res) => {
-    //post a bookmark
-})
-app.delete('/bookmars/:id', (req, res) => {
-    //delete a bookmark with given ID
-})
-app.get('/bookmarks/:id', (req, res) => {
-    //returns a signle bookmark with given ID, return 404 Not Found if ID invalid
-})
-
 app.use(function errorHandler(error, req, res, next) {
     let response;
     if(NODE_ENV === 'production') {
