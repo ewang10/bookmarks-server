@@ -28,4 +28,23 @@ function makeBookmarksArray() {
     ];
 }
 
-module.exports = { makeBookmarksArray };
+function makeMaliciousArticle() {
+    const maliciousBookmark = {
+        id: 911,
+        rating: 5,
+        url: 'some url',
+        title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+        description: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`
+    }
+    const expectedBookmark = {
+        ...maliciousBookmark,
+        title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
+        description: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+    }
+    return {
+        maliciousBookmark,
+        expectedBookmark,
+    }
+}
+
+module.exports = { makeBookmarksArray, makeMaliciousArticle };
