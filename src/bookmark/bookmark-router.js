@@ -1,7 +1,8 @@
+const path = require('path');
 const express = require('express');
 const logger = require('../logger');
-const uuid = require('uuid/v4');
-const bookmarks = require('../store');
+//const uuid = require('uuid/v4');
+//const bookmarks = require('../store');
 const BookmarksService = require('./bookmarks-service');
 const xss = require('xss');
 
@@ -17,7 +18,7 @@ const serializeBookmark = bookmark => ({
 })
 
 bookmarkRouter
-    .route('/bookmarks')
+    .route('/')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db');
         BookmarksService.getBookmarks(knexInstance)
@@ -30,12 +31,12 @@ bookmarkRouter
         const { title, url, description = '', rating } = req.body;
 
         const newBookmark = { title, url, description, rating };
-        console.log('title ', url)
+        //console.log('title ', url)
         for (const [key, value] of Object.entries(newBookmark)) {
             if (value == null) {
                 logger.error(`${key} is required`)
                 return res.status(400).json({
-                    error: {message: `Missing '${key}' in request body`}
+                    error: { message: `Missing '${key}' in request body` }
                 });
             }
         }
@@ -55,14 +56,14 @@ bookmarkRouter
                 logger.info(`Bookmark with id ${bookmark.id} created.`);
                 res
                     .status(201)
-                    .location(`/bookmarks/${bookmark.id}`)
+                    .location(path.posix.join(req.originalUrl) + `/${bookmark.id}`)
                     .json(serializeBookmark(bookmark));
             })
             .catch(next);
     });
 
 bookmarkRouter
-    .route('/bookmarks/:id')
+    .route('/:id')
     .all((req, res, next) => {
         const knexInstance = req.app.get('db');
         BookmarksService.getById(knexInstance, req.params.id)
@@ -89,7 +90,32 @@ bookmarkRouter
                 res.status(204).end();
             })
             .catch(next);
+
+    })
+    .patch(parseBody, (req, res, next) => {
+        const { title, url, rating, description } = req.body;
+        const updatedBookmark = { title, url, rating, description };
+
+        const numOfValues = Object.values(updatedBookmark).filter(Boolean).length;
         
+
+        if (numOfValues === 0) {
+            return res.status(400).json({
+                error: {
+                    message: `Request body must contain either 'title', 'url', 'description', or 'rating'`
+                }
+            });
+        }
+
+        BookmarksService.updateBookmark(
+            req.app.get('db'),
+            req.params.id,
+            updatedBookmark
+        )
+            .then(() => {
+                res.status(204).end();
+            })
+            .catch(next);
     });
 
 module.exports = bookmarkRouter;
