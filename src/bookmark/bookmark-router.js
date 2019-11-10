@@ -30,7 +30,7 @@ bookmarkRouter
         const { title, url, description = '', rating } = req.body;
 
         const newBookmark = { title, url, description, rating };
-
+        console.log('title ', url)
         for (const [key, value] of Object.entries(newBookmark)) {
             if (value == null) {
                 logger.error(`${key} is required`)
@@ -45,13 +45,13 @@ bookmarkRouter
             return res.status(400).send(`'rating' must be a number between 0 and 5`);
         }
 
-        console.log('reach0000000000')
+        //console.log('reach0000000000')
         BookmarksService.insertBookmark(
             req.app.get('db'),
             newBookmark
         )
             .then(bookmark => {
-                console.log('reachhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+                //console.log('reachhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
                 logger.info(`Bookmark with id ${bookmark.id} created.`);
                 res
                     .status(201)

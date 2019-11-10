@@ -166,11 +166,11 @@ describe.only('Bookmarks Endpoints', () => {
         context('Given an XSS attack bookmark', () => {
             const {maliciousBookmark, expectedBookmark} = makeMaliciousBookmark();
             
-            it.only('removes XSS attack content', () => {
+            it('removes XSS attack content', () => {
                 return supertest(app)
                     .post(`/bookmarks`)
                     .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-                    .send([maliciousBookmark])
+                    .send(maliciousBookmark)
                     .expect(201)
                     .expect(res => {
                         expect(res.body.title).to.eql(expectedBookmark.title);
