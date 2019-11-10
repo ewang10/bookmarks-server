@@ -28,7 +28,7 @@ function makeBookmarksArray() {
     ];
 }
 
-function makeMaliciousArticle() {
+function makeMaliciousBookmark() {
     const maliciousBookmark = {
         id: 911,
         rating: 5,
@@ -47,4 +47,4 @@ function makeMaliciousArticle() {
     }
 }
 
-module.exports = { makeBookmarksArray, makeMaliciousArticle };
+module.exports = { makeBookmarksArray, makeMaliciousBookmark };

@@ -45,11 +45,13 @@ bookmarkRouter
             return res.status(400).send(`'rating' must be a number between 0 and 5`);
         }
 
+        console.log('reach0000000000')
         BookmarksService.insertBookmark(
             req.app.get('db'),
             newBookmark
         )
             .then(bookmark => {
+                console.log('reachhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
                 logger.info(`Bookmark with id ${bookmark.id} created.`);
                 res
                     .status(201)

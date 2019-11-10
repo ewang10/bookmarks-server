@@ -1,6 +1,6 @@
 const knex = require('knex');
 const app = require('../src/app');
-const { makeBookmarksArray, makeMaliciousArticle } = require('./bookmarks.fixtures');
+const { makeBookmarksArray, makeMaliciousBookmark } = require('./bookmarks.fixtures');
 
 describe.only('Bookmarks Endpoints', () => {
     let db;
@@ -45,7 +45,7 @@ describe.only('Bookmarks Endpoints', () => {
         });
 
         context('Given an XSS attack bookmark', () => {
-            const {maliciousBookmark, expectedBookmark} = makeMaliciousArticle();
+            const {maliciousBookmark, expectedBookmark} = makeMaliciousBookmark();
             beforeEach('insert malicious bookmark', () => {
                 return db
                     .into('bookmarks')
@@ -92,7 +92,7 @@ describe.only('Bookmarks Endpoints', () => {
         });
 
         context('Given an XSS attack bookmark', () => {
-            const {maliciousBookmark, expectedBookmark} = makeMaliciousArticle();
+            const {maliciousBookmark, expectedBookmark} = makeMaliciousBookmark();
             beforeEach('insert malicious bookmark', () => {
                 return db
                     .into('bookmarks')
@@ -164,11 +164,11 @@ describe.only('Bookmarks Endpoints', () => {
         });
 
         context('Given an XSS attack bookmark', () => {
-            const {maliciousBookmark, expectedBookmark} = makeMaliciousArticle();
+            const {maliciousBookmark, expectedBookmark} = makeMaliciousBookmark();
             
-            it('removes XSS attack content', () => {
+            it.only('removes XSS attack content', () => {
                 return supertest(app)
-                    .get(`/bookmarks`)
+                    .post(`/bookmarks`)
                     .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .send([maliciousBookmark])
                     .expect(201)
